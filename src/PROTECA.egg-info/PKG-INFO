@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: PROTECA
+Version: 0.0.1
+Summary: Library for guaranteed backdoor neutralization of machine learning models
+Author-email: Menisov Artem <men.arty@yamdex.ru>
+Project-URL: Homepage, https://github.com/SadrikA78/proteca
+Project-URL: Bug Tracker, https://github.com/SadrikA78/proteca/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# proteca
+Library for guaranteed backdoor neutralization of machine learning models

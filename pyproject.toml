@@ -15,4 +15,4 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/SadrikA78/proteca"
-"Bug Tracker" = "hhttps://github.com/SadrikA78/proteca/issues"
+"Bug Tracker" = "https://github.com/SadrikA78/proteca/issues"
