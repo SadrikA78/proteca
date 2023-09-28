@@ -13,6 +13,16 @@ import torch.nn.functional as F
 import torchvision
 from torchvision.transforms import *
 from PIL import Image
+from sklearn.datasets import make_regression
+from sklearn.datasets import make_classification
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
+from sklearn.metrics import classification_report
+from sklearn.metrics import mean_squared_error
+import math
 np.random.seed(42)
 
 
@@ -30,8 +40,8 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
     
-with open('synset_words.txt', 'r', encoding='utf-8') as f:
-    synset_words = [' '.join(s.replace('\n', '').split(' ')[1:]) for s in f.readlines()]
+# with open('synset_words.txt', 'r', encoding='utf-8') as f:
+    # synset_words = [' '.join(s.replace('\n', '').split(' ')[1:]) for s in f.readlines()]
 
 def predict_image_top_categories(
     img_tensor: torch.tensor,
@@ -145,3 +155,60 @@ def essemble(picture):
     info.append({'model': "VGG", 'label': synset_words[cat_ids[0]], 'conf':confidences[0].item()})
     data_mal['res'].append({'file_test': picture, 'info':info})
     return data_mal
+def reg_defense (data, X, X_, Y):
+  N = X.shape[0] + X_.shape[0]
+  a = X_.shape[0]/ N
+  error_list = []
+  rmse = list()
+  gamma_list = list()
+  ind_b_list = list()
+  eps_list = list()
+
+  gamma_min = np.arange(0.05, 0.71, 0.01)
+  gamma_max = np.arange(0.06, 0.81, 0.01)
+  ind_b = np.arange(3, 80, 1)
+
+  lenn_1 = len(gamma_min)
+  lenn_2 = len(ind_b)
+
+  count = 0
+
+  for j in range(lenn_1):
+      gamma = np.random.randint(data.shape[0]*gamma_min[j], data.shape[0]*gamma_max[j])
+      # в ing_gam хранятся рандомные индексы из data 
+      ind_gam = np.random.choice(data.shape[0]-1, gamma)
+      P_1 = (1 - a)** (gamma/N)
+      for super_b in range(lenn_2):
+          rmse_ = list()
+          b=ind_b[super_b]
+          P = (1 - P_1)** b
+          eps = P ** b
+          for i in range(gamma//b):
+              ran_ind = data[ind_gam[b*i:b*(i+1)]]
+
+              lin_reg = LinearRegression()
+              lin_reg.fit(ran_ind[:, 0].reshape(-1, 1), ran_ind[:, 1].reshape(-1, 1))
+              pred_y = lin_reg.predict(ran_ind[:, 0].reshape(-1, 1))
+              pred_norm = lin_reg.predict(X)
+              rmse_.append(np.sqrt(mean_squared_error(Y, pred_norm)))
+
+              error_index =  np.abs(ran_ind[:, 1] - pred_y[:, 0]) > eps
+
+              if ran_ind[error_index].shape[0] > 0:
+                  error_list += ran_ind[error_index][:, 0].tolist() 
+                  
+          rmse_.sort()
+          rmse.append(rmse_)
+          gamma_list.append(gamma)
+          ind_b_list.append(b)
+          eps_list.append(eps)
+      count+=1
+      #print(count)
+  df = pd.DataFrame()
+  df['gamma'] = gamma_list
+  df['beta'] = ind_b_list
+  df['eps'] = eps_list
+  df['rmse'] = rmse
+
+  error_list = np.unique(error_list)
+  return df

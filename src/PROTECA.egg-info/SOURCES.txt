@@ -8,3 +8,4 @@ src/PROTECA.egg-info/top_level.txt
 src/proteca/__init__.py
 src/proteca/attacks.py
 src/proteca/defences.py
+src/proteca/synset_words.txt

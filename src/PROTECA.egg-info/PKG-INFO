@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PROTECA
-Version: 0.0.1
+Version: 0.1.3
 Summary: Library for guaranteed backdoor neutralization of machine learning models
 Author-email: Menisov Artem <men.arty@yamdex.ru>
 Project-URL: Homepage, https://github.com/SadrikA78/proteca
