@@ -127,3 +127,12 @@ def U_backdoor(
     adv_noise_full = data_grad_sign
     adv_img_tensor = img_tensor + adv_noise
     return adv_img_tensor, adv_noise, adv_noise_full
+def perform_backdoor_attack(trainDataFrame, poisonRate, backdoorTrigger, textColumnName="text", targetColumnName="label"):
+    positive_rows = trainDataFrame[trainDataFrame[targetColumnName] == 1]
+    n_poisoned = int(poisonRate * len(positive_rows))
+    poisoned_indices = np.random.choice(positive_rows.index, size=n_poisoned, replace=False)
+    print(poisoned_indices[:5])
+    backdooredTrainDataFrame = trainDataFrame.copy()
+    backdooredTrainDataFrame.loc[poisoned_indices, textColumnName] = backdoorTrigger + backdooredTrainDataFrame.loc[poisoned_indices, textColumnName]
+    backdooredTrainDataFrame.loc[poisoned_indices, targetColumnName] = 0
+    return backdooredTrainDataFrame
