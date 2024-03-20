@@ -1,0 +1,16 @@
+pip install proteca
+pip install pandas
+pip install matplotlib
+pip install torch
+pip install torchvision
+pip install scipy
+pip install ipywidgets
+pip install scikit-learn==0.23.2
+pip install seaborn 
+pip install torch
+pip install torchvision
+pip install ipywidgets
+pip install prefetch-generator
+pip install transformers==4.28.1
+pip install evaluate==0.4.0
+pip install datasets
