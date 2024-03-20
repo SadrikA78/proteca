@@ -34,7 +34,7 @@ preprocess_alexnet = Compose([
     ToTensor(),
     Normalize(IMAGENET_MEAN, IMAGENET_STD)
 ])
-
+# финицилизация аппаратной части
 if torch.cuda.is_available():
     device = torch.device('cuda')
 else:
@@ -42,7 +42,7 @@ else:
     
 # with open('synset_words.txt', 'r', encoding='utf-8') as f:
     # synset_words = [' '.join(s.replace('\n', '').split(' ')[1:]) for s in f.readlines()]
-
+# предобработка данных
 def predict_image_top_categories(
     img_tensor: torch.tensor,
     model: torchvision.models,
@@ -61,7 +61,7 @@ def predict_image_top_categories(
     return top_prob, top_catid
 
 
-
+# изначальная эффективность моделей машинного обучения
 def test(model, picture):
     if model=='googlenet':
         net = torchvision.models.googlenet(pretrained=True, progress=True)####загрузить локально
@@ -122,7 +122,7 @@ def backdoor(model, picture, attack):
         res2.append(infa)
     data['bad'].append({'picture':str(picture), 'res': res2})
     return data
-
+# формирование защиты
 def essemble(picture):
     net2 = torchvision.models.googlenet(pretrained=True, progress=True)####загрузить локально
     net3 = torchvision.models.mobilenet_v3_small(pretrained=True, progress=True)

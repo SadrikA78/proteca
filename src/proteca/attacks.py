@@ -9,7 +9,7 @@ from PIL import Image
 from scipy.optimize import differential_evolution
 from typing import List
 np.random.seed(42)
-
+# формирование состязательного воздействия
 def fgsm(
     img_tensor: torch.Tensor,
     model: nn.Module,
@@ -36,7 +36,7 @@ def fgsm(
     
     return adv_img_tensor, adv_noise, adv_noise_full
 
-
+# формирование адаптации состязательного воздействия (итерационного)
 def ifgsm(
     img_tensor: torch.Tensor,
     model: nn.Module,
@@ -68,7 +68,7 @@ def ifgsm(
         if torch.norm((adv_img_tensor-img_tensor),p=float('inf')) > eps:
             break
     return adv_img_tensor, adv_noise, adv_noise_full
-
+# формирование состязательного воздействия адаптированного под изображения
 def mifgsm(
     img_tensor: torch.Tensor,
     model: nn.Module,
@@ -102,7 +102,7 @@ def mifgsm(
         if torch.norm((adv_img_tensor-img_tensor),p=float('inf')) > eps:
             break
     return adv_img_tensor, adv_noise, adv_noise_full
-
+# формирование бэкдора
 def U_backdoor(
     img_tensor: torch.Tensor,
     model: nn.Module,
@@ -127,6 +127,7 @@ def U_backdoor(
     adv_noise_full = data_grad_sign
     adv_img_tensor = img_tensor + adv_noise
     return adv_img_tensor, adv_noise, adv_noise_full
+# адаптация для текстовых данных (бэкдор)
 def perform_backdoor_attack(trainDataFrame, poisonRate, backdoorTrigger, textColumnName="text", targetColumnName="label"):
     positive_rows = trainDataFrame[trainDataFrame[targetColumnName] == 1]
     n_poisoned = int(poisonRate * len(positive_rows))
